@@ -1,18 +1,8 @@
-class Solution:
-    def buddyStrings(self, s: str, goal: str) -> bool:
-
-        if len(s) != len(goal):
+class Solution(object):
+    def buddyStrings(self, A, B):
+        if len(A) != len(B):
             return False
-        
-        if s == goal:
-            return [1 for x in collections.Counter(s).values() if x >1]
-        
-        lst = list(s)
-        i = None
-        for x in range(len(s)):
-            if s[x] != goal[x]:
-                if i is None:
-                    i = x
-                else:
-                    lst[x], lst[i] = lst[i], lst[x]
-                    return "".join(lst) == goal
+        if A == B and len(A) > len(set(A)):
+            return True
+        d = [(a, b) for a, b in zip(A, B) if a != b]
+        return len(d) == 2 and d[0] == d[1][::-1]

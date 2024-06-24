@@ -1,0 +1,31 @@
+class Solution {
+    public int minKBitFlips(int[] A, int K) {
+        int n = A.length;   
+        int flipped = 0;   
+        int res = 0;      
+        int[] isFlipped = new int[n];
+
+        for (int i = 0; i < A.length; ++i) {
+           
+            if (i >= K) {
+                flipped ^= isFlipped[i - K];
+            }
+
+           
+            if (flipped == A[i]) {
+               
+                if (i + K > A.length) {
+                    return -1;
+                }
+
+                 isFlipped[i] = 1;
+                
+                flipped ^= 1;
+
+                res++;
+            }
+        }
+
+        return res;
+    }
+}

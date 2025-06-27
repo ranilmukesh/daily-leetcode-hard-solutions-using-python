@@ -1,0 +1,71 @@
+class Solution {
+
+    private int bestM;
+    private char[] bestPrefix;
+
+    private boolean match(char[] s, int k, char[] ss, int m) {
+        int i = 0;
+        while (k-- > 0) {
+            int j = 0;
+            while (i < s.length && j < m) {
+                if (s[i] == ss[j]) {
+                    j++;
+                }
+                i++;
+            }
+            if (j < m) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void walk(char[] s, int[] count, int[] currCount, int k, char[] prefix, int m, int maxLength) {
+        if (m > maxLength) {
+            return;
+        }
+
+        if (m > bestM) {
+            if (match(s, k , prefix, m)) {
+                for (int i = 0; i <= m; i++) {
+                    bestPrefix[i] = prefix[i];
+                }
+                bestM = m;
+            } else {
+                return;
+            }
+        }
+
+        for (char c = 'z'; c >= 'a'; c--) {
+            if (currCount[c - 'a'] == count[c - 'a']) {
+                continue;
+            }
+            prefix[m] = c;
+            currCount[c - 'a']++;
+            walk(s, count, currCount, k, prefix, m + 1, maxLength);
+            currCount[c - 'a']--;
+        }
+    }
+
+    public String longestSubsequenceRepeatedK(String s, int k) {
+        int n = s.length();
+        char[] sChar = s.toCharArray();
+        
+        int[] count = new int [26];
+        for (char c : sChar) {
+            count[c - 'a']++;
+        }
+        for (int i = 0; i < 26; i++) {
+            count[i] /= k;
+        }
+
+        int maxLength = n / k;
+        char[] prefix = new char[maxLength + 1];
+        bestPrefix = new char[maxLength + 1];
+        bestM = -1;
+
+        walk(sChar, count, new int[26],k, prefix, 0, maxLength);
+
+        return new String(bestPrefix, 0, bestM);
+    }
+}
